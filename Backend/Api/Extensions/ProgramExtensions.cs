@@ -187,7 +187,7 @@ namespace Api.Extensions
 
         public static WebApplication ConfigureDevelopmentEnvironment(this WebApplication app)
         {
-            if (app.Environment.IsDevelopment())
+            if (!app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI(c =>
