@@ -1,0 +1,24 @@
+@Api_HostAddress = http://localhost:5134
+@JWT_TOKEN = your_jwt_token_here
+
+### Test AdminUser Login
+POST {{Api_HostAddress}}/api/Auth/Login
+Content-Type: application/json
+
+{
+  "username": "root",
+  "password": "Root12341234"
+}
+
+### Test JWT Verification - Get Current User (requires valid JWT)
+GET {{Api_HostAddress}}/api/Auth/me
+Authorization: Bearer {{JWT_TOKEN}}
+
+### Test Restaurant Endpoints (requires valid JWT)
+GET {{Api_HostAddress}}/api/Restaurant
+Authorization: Bearer {{JWT_TOKEN}}
+
+GET {{Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
