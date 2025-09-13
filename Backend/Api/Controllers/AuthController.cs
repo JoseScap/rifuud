@@ -44,27 +44,17 @@ public class AuthController : BaseController
     }
 
     /// <summary>
-    /// Test endpoint to verify AdminUser JWT authentication
+    /// Get current admin user profile information
     /// </summary>
-    /// <returns>Current admin user information</returns>
-    [HttpGet("Admin/Me")]
+    /// <returns>Current admin user profile</returns>
+    [HttpGet("Admin/Profile")]
     [Authorize(AuthenticationSchemes = "AdminUser")]
-    [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(AdminProfileResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public IActionResult GetAdminUser()
+    public async Task<IActionResult> GetAdminUserProfile()
     {
-        var user = HttpContext.User;
-        var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
-        var username = user.FindFirst(ClaimTypes.Name)?.Value ?? string.Empty;
-        var role = user.FindFirst(ClaimTypes.Role)?.Value ?? string.Empty;
-
-        return Ok(new AdminMeResponse(
-            "AdminUser JWT authentication successful",
-            userId,
-            username,
-            role,
-            user.Identity?.IsAuthenticated ?? false
-        ));
+        var response = await _authService.GetAdminUserProfile(HttpContext.User);
+        return Ok(response);
     }
 
     /// <summary>
@@ -87,31 +77,17 @@ public class AuthController : BaseController
     }
 
     /// <summary>
-    /// Test endpoint to verify RestaurantUser JWT authentication
+    /// Get current restaurant user profile information
     /// </summary>
-    /// <returns>Current restaurant user information</returns>
-    [HttpGet("Restaurant/Me")]
+    /// <returns>Current restaurant user profile</returns>
+    [HttpGet("Restaurant/Profile")]
     [Authorize(AuthenticationSchemes = "RestaurantUser")]
-    [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(RestaurantProfileResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public IActionResult GetRestaurantUser()
+    public async Task<IActionResult> GetRestaurantUserProfile()
     {
-        var user = HttpContext.User;
-        var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
-        var username = user.FindFirst(ClaimTypes.Name)?.Value ?? string.Empty;
-        var role = user.FindFirst(ClaimTypes.Role)?.Value ?? string.Empty;
-        var restaurantId = user.FindFirst("restaurantId")?.Value ?? string.Empty;
-        var restaurantSubdomain = user.FindFirst("restaurantSubdomain")?.Value ?? string.Empty;
-        var userType = user.FindFirst("userType")?.Value ?? string.Empty;
-
-        return Ok(new RestaurantMeResponse(
-            "RestaurantUser JWT authentication successful",
-            userId,
-            username,
-            role,
-            user.Identity?.IsAuthenticated ?? false,
-            restaurantSubdomain
-        ));
+        var response = await _authService.GetRestaurantUserProfile(HttpContext.User);
+        return Ok(response);
     }
 
 }

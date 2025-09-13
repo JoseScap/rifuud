@@ -2,6 +2,7 @@ using Api.Data;
 using Api.Dtos.Requests;
 using Api.Dtos.Responses;
 using Api.Errors;
+using Api.Extensions;
 using Api.Models;
 using Api.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -43,7 +44,7 @@ public class RestaurantService : IRestaurantService
         _logger.LogInformation("Restaurant '{Name}' with subdomain '{Subdomain}' created successfully", 
             restaurant.Name, restaurant.Subdomain);
 
-        return CreateRestaurantResponse.FromDomain(restaurant);
+        return restaurant.ToCreateRestaurantResponse();
     }
 
     public async Task<ListOneRestaurantResponse> GetRestaurantByIdAsync(Guid id)
@@ -59,13 +60,13 @@ public class RestaurantService : IRestaurantService
             );
         }
 
-        return ListOneRestaurantResponse.FromDomain(restaurant);
+        return restaurant.ToListOneRestaurantResponse();
     }
 
     public async Task<ListManyRestaurantsResponse> GetManyRestaurantsAsync()
     {
         var restaurants = await _context.Restaurants.ToListAsync();
-        return ListManyRestaurantsResponse.FromDomain(restaurants);
+        return restaurants.ToListManyRestaurantsResponse();
     }
 
     public async Task<ListOneRestaurantResponse> ToggleRestaurantStatusAsync(Guid id, bool isActive)
@@ -90,6 +91,6 @@ public class RestaurantService : IRestaurantService
         _logger.LogInformation("Restaurant '{Name}' status changed to {Status}", 
             restaurant.Name, isActive ? "Active" : "Inactive");
 
-        return ListOneRestaurantResponse.FromDomain(restaurant);
+        return restaurant.ToListOneRestaurantResponse();
     }
 }

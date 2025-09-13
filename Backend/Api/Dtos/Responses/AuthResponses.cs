@@ -24,7 +24,7 @@ public class LoginRestaurantUserResponse
     }
 }
 
-public class AdminMeResponse
+public class AdminProfileResponse
 {
     public string Message { get; set; } = string.Empty;
     public string UserId { get; set; } = string.Empty;
@@ -32,9 +32,9 @@ public class AdminMeResponse
     public string Role { get; set; } = string.Empty;
     public bool IsAuthenticated { get; set; }
 
-    public AdminMeResponse() { }
+    public AdminProfileResponse() { }
 
-    public AdminMeResponse(string message, string userId, string username, string role, bool isAuthenticated)
+    public AdminProfileResponse(string message, string userId, string username, string role, bool isAuthenticated)
     {
         Message = message;
         UserId = userId;
@@ -44,7 +44,7 @@ public class AdminMeResponse
     }
 }
 
-public class RestaurantMeResponse
+public class RestaurantProfileResponse
 {
     public string Message { get; set; } = string.Empty;
     public string UserId { get; set; } = string.Empty;
@@ -53,9 +53,9 @@ public class RestaurantMeResponse
     public bool IsAuthenticated { get; set; }
     public string RestaurantSubdomain { get; set; } = string.Empty;
 
-    public RestaurantMeResponse() { }
+    public RestaurantProfileResponse() { }
 
-    public RestaurantMeResponse(
+    public RestaurantProfileResponse(
         string message, string userId, string username,
         string role, bool isAuthenticated, string restaurantSubdomain)
     {

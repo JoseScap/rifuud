@@ -21,14 +21,6 @@ public class CreateRestaurantResponse : BaseDtoResponse
         CreatedAt = createdAt;
         UpdatedAt = updatedAt;
     }
-
-    public static CreateRestaurantResponse FromDomain(Restaurant restaurant) =>
-        new (restaurant.Id,
-            restaurant.Name,
-            restaurant.Subdomain,
-            restaurant.IsActive,
-            restaurant.CreatedAt,
-            restaurant.UpdatedAt);
 }
 
 public class ListOneRestaurantResponse : BaseDtoResponse   
@@ -50,14 +42,6 @@ public class ListOneRestaurantResponse : BaseDtoResponse
         CreatedAt = createdAt;
         UpdatedAt = updatedAt;
     }
-
-    public static ListOneRestaurantResponse FromDomain(Restaurant restaurant) =>
-        new (restaurant.Id,
-            restaurant.Name,
-            restaurant.Subdomain,
-            restaurant.IsActive,
-            restaurant.CreatedAt,
-            restaurant.UpdatedAt);
 }
 
 public class ListManyRestaurantsResponse
@@ -70,7 +54,4 @@ public class ListManyRestaurantsResponse
     {
         Restaurants = restaurants;
     }
-
-    public static ListManyRestaurantsResponse FromDomain(List<Restaurant> restaurants) =>
-        new (restaurants.Select(r => ListOneRestaurantResponse.FromDomain(r)).ToList());
 }

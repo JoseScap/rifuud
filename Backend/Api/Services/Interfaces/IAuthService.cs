@@ -12,7 +12,7 @@ public interface IAuthService
     Task<string> GenerateAdminUserJwtToken(AdminUser user);
     Task<LoginAdminUserResponse> LoginAdminUser(string username, string password);
     Task<bool> ValidateAdminUserJwtToken(string token);
-    Task<ClaimsPrincipal?> GetAdminUserFromJwtToken(string token);
+    Task<AdminProfileResponse> GetAdminUserProfile(ClaimsPrincipal user);
 
     Task<bool> ValidateRestaurantUserPassword(string password);
     Task<string> HashRestaurantUserPassword(string password);
@@ -20,5 +20,5 @@ public interface IAuthService
     Task<string> GenerateRestaurantUserJwtToken(RestaurantUser user);
     Task<LoginRestaurantUserResponse> LoginRestaurantUser(string username, string password);
     Task<bool> ValidateRestaurantUserJwtToken(string token);
-    Task<ClaimsPrincipal?> GetRestaurantUserFromJwtToken(string token);
+    Task<RestaurantProfileResponse> GetRestaurantUserProfile(ClaimsPrincipal user);
 }

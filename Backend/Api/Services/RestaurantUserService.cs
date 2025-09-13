@@ -5,6 +5,7 @@ using Api.Errors;
 using Api.Models;
 using Api.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Api.Extensions;
 
 namespace Api.Services;
 
@@ -76,7 +77,7 @@ public class RestaurantUserService : IRestaurantUserService
         _logger.LogInformation("Restaurant user '{Username}' created successfully for restaurant '{Subdomain}'", 
             restaurantUser.Username, restaurantUser.RestaurantSubdomain);
 
-        return CreateRestaurantUserResponse.FromDomain(restaurantUser);
+        return restaurantUser.ToCreateRestaurantUserResponse();
     }
 
     public async Task<ListOneRestaurantUserResponse> GetRestaurantUserByIdAsync(Guid id)
@@ -95,7 +96,7 @@ public class RestaurantUserService : IRestaurantUserService
 
         _logger.LogInformation("Restaurant user '{Username}' retrieved successfully", restaurantUser.Username);
 
-        return ListOneRestaurantUserResponse.FromDomain(restaurantUser);
+        return restaurantUser.ToListOneRestaurantUserResponse();
     }
 
     public async Task<ListManyRestaurantUsersResponse> GetManyRestaurantUsersAsync()
@@ -107,7 +108,7 @@ public class RestaurantUserService : IRestaurantUserService
 
         _logger.LogInformation("Retrieved {Count} restaurant users successfully", restaurantUsers.Count);
 
-        return ListManyRestaurantUsersResponse.FromDomain(restaurantUsers);
+        return restaurantUsers.ToListManyRestaurantUsersResponse();
     }
     
 }

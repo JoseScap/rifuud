@@ -33,12 +33,6 @@ public class CreateRestaurantUserResponse : BaseDtoResponse
         CreatedAt = createdAt;
         UpdatedAt = updatedAt;
     }
-
-    public static CreateRestaurantUserResponse FromDomain(RestaurantUser restaurantUser) =>
-        new (restaurantUser.Id, restaurantUser.FirstName, restaurantUser.LastName,
-        restaurantUser.Phone, restaurantUser.Role, restaurantUser.Username,
-        restaurantUser.RestaurantId, restaurantUser.RestaurantSubdomain,
-        restaurantUser.IsActive, restaurantUser.CreatedAt, restaurantUser.UpdatedAt);
 }
 
 public class ListOneRestaurantUserResponse : BaseDtoResponse
@@ -72,12 +66,6 @@ public class ListOneRestaurantUserResponse : BaseDtoResponse
         CreatedAt = createdAt;
         UpdatedAt = updatedAt;
     }
-
-    public static ListOneRestaurantUserResponse FromDomain(RestaurantUser restaurantUser) =>
-        new (restaurantUser.Id, restaurantUser.FirstName, restaurantUser.LastName,
-        restaurantUser.Phone, restaurantUser.Role, restaurantUser.Username,
-        restaurantUser.RestaurantId, restaurantUser.RestaurantSubdomain,
-        restaurantUser.IsActive, restaurantUser.CreatedAt, restaurantUser.UpdatedAt);
 }
 
 public class ListManyRestaurantUsersResponse
@@ -90,7 +78,4 @@ public class ListManyRestaurantUsersResponse
     {
         RestaurantUsers = restaurantUsers;
     }
-
-    public static ListManyRestaurantUsersResponse FromDomain(List<RestaurantUser> restaurantUsers) =>
-        new (restaurantUsers.Select(ru => ListOneRestaurantUserResponse.FromDomain(ru)).ToList());
 }

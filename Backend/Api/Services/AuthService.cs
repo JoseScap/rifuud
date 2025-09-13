@@ -455,4 +455,42 @@ public class AuthService : IAuthService
             return Task.FromResult<ClaimsPrincipal?>(null);
         }
     }
+
+    public Task<AdminProfileResponse> GetAdminUserProfile(ClaimsPrincipal user)
+    {
+        var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
+        var username = user.FindFirst(ClaimTypes.Name)?.Value ?? string.Empty;
+        var role = user.FindFirst(ClaimTypes.Role)?.Value ?? string.Empty;
+
+        var response = new AdminProfileResponse(
+            "AdminUser JWT authentication successful",
+            userId,
+            username,
+            role,
+            user.Identity?.IsAuthenticated ?? false
+        );
+
+        return Task.FromResult(response);
+    }
+
+    public Task<RestaurantProfileResponse> GetRestaurantUserProfile(ClaimsPrincipal user)
+    {
+        var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
+        var username = user.FindFirst(ClaimTypes.Name)?.Value ?? string.Empty;
+        var role = user.FindFirst(ClaimTypes.Role)?.Value ?? string.Empty;
+        var restaurantId = user.FindFirst("restaurantId")?.Value ?? string.Empty;
+        var restaurantSubdomain = user.FindFirst("restaurantSubdomain")?.Value ?? string.Empty;
+        var userType = user.FindFirst("userType")?.Value ?? string.Empty;
+
+        var response = new RestaurantProfileResponse(
+            "RestaurantUser JWT authentication successful",
+            userId,
+            username,
+            role,
+            user.Identity?.IsAuthenticated ?? false,
+            restaurantSubdomain
+        );
+
+        return Task.FromResult(response);
+    }
 }
