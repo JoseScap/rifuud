@@ -96,16 +96,16 @@ public class RestaurantService : IRestaurantService
         return restaurant.ToListOneRestaurantResponse();
     }
 
-    public async Task<CreateRestaurantUserResponse> CreateRestaurantUserAsync(CreateRestaurantUserRequest request)
+    public async Task<CreateRestaurantUserResponse> CreateRestaurantUserForRestaurantAsync(Guid restaurantId, CreateRestaurantUserRequest request)
     {
         // Validate that the restaurant exists
         var restaurant = await _context.Restaurants
-            .FirstOrDefaultAsync(r => r.Id == request.RestaurantId);
+            .FirstOrDefaultAsync(r => r.Id == restaurantId);
 
         if (restaurant == null)
         {
             throw new NotFoundError(
-                $"Restaurant with ID {request.RestaurantId} not found", 
+                $"Restaurant with ID {restaurantId} not found", 
                 ErrorCodes.RESTAURANT_NOT_FOUND, 
                 "The requested restaurant could not be found."
             );

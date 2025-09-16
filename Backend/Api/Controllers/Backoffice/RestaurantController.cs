@@ -80,46 +80,47 @@ public class RestaurantController : BaseController
     /// <summary>
     /// Activate a restaurant
     /// </summary>
-    /// <param name="id">Restaurant ID</param>
+    /// <param name="restaurantId">Restaurant ID</param>
     /// <returns>Activated restaurant information</returns>
-    [HttpPost("{id}/activate")]
+    [HttpPost("{restaurantId}/activate")]
     [ProducesResponseType(typeof(ListOneRestaurantResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> Activate(Guid id)
+    public async Task<IActionResult> Activate(Guid restaurantId)
     {
-        var response = await _restaurantService.ToggleRestaurantStatusAsync(id, true);
+        var response = await _restaurantService.ToggleRestaurantStatusAsync(restaurantId, true);
         return Ok(response);
     }
 
     /// <summary>
     /// Deactivate a restaurant
     /// </summary>
-    /// <param name="id">Restaurant ID</param>
+    /// <param name="restaurantId">Restaurant ID</param>
     /// <returns>Deactivated restaurant information</returns>
-    [HttpPost("{id}/deactivate")]
+    [HttpPost("{restaurantId}/deactivate")]
     [ProducesResponseType(typeof(ListOneRestaurantResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> Deactivate(Guid id)
+    public async Task<IActionResult> Deactivate(Guid restaurantId)
     {
-        var response = await _restaurantService.ToggleRestaurantStatusAsync(id, false);
+        var response = await _restaurantService.ToggleRestaurantStatusAsync(restaurantId, false);
         return Ok(response);
     }
 
     /// <summary>
     /// Create a new restaurant user
     /// </summary>
+    /// <param name="restaurantId">Restaurant ID</param>
     /// <param name="request">Restaurant user creation data</param>
     /// <returns>Created restaurant user information</returns>
-    [HttpPost]
+    [HttpPost("{restaurantId}/Users")]
     [ProducesResponseType(typeof(CreateRestaurantUserResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
-    public async Task<IActionResult> CreateRestaurantUser([FromBody] CreateRestaurantUserRequest request)
+    public async Task<IActionResult> CreateRestaurantUser(Guid restaurantId, [FromBody] CreateRestaurantUserRequest request)
     {
-        var response = await _restaurantService.CreateRestaurantUserAsync(request);
+        var response = await _restaurantService.CreateRestaurantUserForRestaurantAsync(restaurantId, request);
 
         _logger.LogInformation("Restaurant user '{Username}' created successfully for restaurant '{RestaurantId}'", 
             response.Username, response.RestaurantId);

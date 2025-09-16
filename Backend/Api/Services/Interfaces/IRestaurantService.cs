@@ -9,7 +9,7 @@ public interface IRestaurantService
     Task<ListOneRestaurantResponse> GetRestaurantByIdAsync(Guid id);
     Task<ListManyRestaurantsResponse> GetManyRestaurantsAsync();
     Task<ListOneRestaurantResponse> ToggleRestaurantStatusAsync(Guid id, bool isActive);
-    Task<CreateRestaurantUserResponse> CreateRestaurantUserAsync(CreateRestaurantUserRequest request);
+    Task<CreateRestaurantUserResponse> CreateRestaurantUserForRestaurantAsync(Guid restaurantId, CreateRestaurantUserRequest request);
     Task<ListOneRestaurantUserResponse> GetRestaurantUserByIdAndRestaurantIdAsync(Guid restaurantId, Guid id);
     Task<ListManyRestaurantUsersResponse> GetManyRestaurantUsersByRestaurantIdAsync(Guid restaurantId);
 }
