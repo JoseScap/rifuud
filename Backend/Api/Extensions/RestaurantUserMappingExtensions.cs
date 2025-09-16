@@ -24,5 +24,5 @@ public static class RestaurantUserMappingExtensions
     public static RestaurantUser ToRestaurantUser(this CreateRestaurantUserRequest request, Restaurant restaurant) =>
         new (request.FirstName, request.LastName, request.Phone,
         isActive: true, request.Role, request.Username,
-        request.Password, restaurant.Subdomain);
+        request.Password, restaurant.Subdomain, restaurant);
 }

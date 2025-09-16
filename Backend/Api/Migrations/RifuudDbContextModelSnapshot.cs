@@ -54,7 +54,7 @@ namespace Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AdminUsers");
+                    b.ToTable("AdminUsers", (string)null);
                 });
 
             modelBuilder.Entity("Api.Models.ProductCategory", b =>
@@ -103,7 +103,7 @@ namespace Api.Migrations
                     b.HasIndex("RestaurantSubdomain", "Name")
                         .IsUnique();
 
-                    b.ToTable("ProductCategories");
+                    b.ToTable("ProductCategories", (string)null);
                 });
 
             modelBuilder.Entity("Api.Models.Restaurant", b =>
@@ -146,7 +146,7 @@ namespace Api.Migrations
                     b.HasIndex("Subdomain")
                         .IsUnique();
 
-                    b.ToTable("Restaurants");
+                    b.ToTable("Restaurants", (string)null);
                 });
 
             modelBuilder.Entity("Api.Models.RestaurantUser", b =>
@@ -208,7 +208,7 @@ namespace Api.Migrations
                     b.HasIndex("RestaurantSubdomain", "Username")
                         .IsUnique();
 
-                    b.ToTable("RestaurantUsers");
+                    b.ToTable("RestaurantUsers", (string)null);
                 });
 
             modelBuilder.Entity("Api.Models.ProductCategory", b =>

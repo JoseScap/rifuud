@@ -13,6 +13,7 @@ public static class ErrorCodes
     public const string AUTH_INSUFFICIENT_PERMISSIONS = "AUTH_INSUFFICIENT_PERMISSIONS";
     public const string AUTH_PASSWORD_REQUIREMENTS = "AUTH_PASSWORD_REQUIREMENTS";
     public const string AUTH_USERNAME_EXISTS = "AUTH_USERNAME_EXISTS";
+    public const string AUTH_INVALID_SUBDOMAIN = "AUTH_INVALID_SUBDOMAIN";
 
     // Restaurant errors
     public const string RESTAURANT_NOT_FOUND = "RESTAURANT_NOT_FOUND";

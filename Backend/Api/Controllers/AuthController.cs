@@ -18,8 +18,12 @@ public class AuthController : BaseController
     private readonly IAuthService _authService;
     private readonly ILogger<AuthController> _logger;
 
-    public AuthController(IAuthService authService, ILogger<AuthController> logger, ISubdomainService subdomainService) 
-        : base(subdomainService)
+    public AuthController(
+        IAuthService authService,
+        ILogger<AuthController> logger,
+        ISubdomainService subdomainService,
+        IConfiguration configuration) 
+        : base(subdomainService, configuration)
     {
         _authService = authService;
         _logger = logger;
@@ -34,6 +38,7 @@ public class AuthController : BaseController
     [ProducesResponseType(typeof(LoginAdminUserResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ValidateBackofficeSubdomain]
     public async Task<IActionResult> Login([FromBody] LoginAdminUserRequest request)
     {
         var response = await _authService.LoginAdminUser(request.Username, request.Password);
@@ -51,6 +56,7 @@ public class AuthController : BaseController
     [Authorize(AuthenticationSchemes = "AdminUser")]
     [ProducesResponseType(typeof(AdminProfileResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ValidateBackofficeSubdomain]
     public async Task<IActionResult> GetAdminUserProfile()
     {
         var response = await _authService.GetAdminUserProfile(HttpContext.User);
@@ -66,6 +72,7 @@ public class AuthController : BaseController
     [ProducesResponseType(typeof(LoginRestaurantUserResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ValidateRestaurantSubdomain]
     public async Task<IActionResult> LoginRestaurantUser([FromBody] LoginRestaurantUserRequest request)
     {
         var response = await _authService.LoginRestaurantUser(request.Username, request.Password);
@@ -84,6 +91,7 @@ public class AuthController : BaseController
     [Authorize(AuthenticationSchemes = "RestaurantUser")]
     [ProducesResponseType(typeof(RestaurantProfileResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ValidateRestaurantSubdomain]
     public async Task<IActionResult> GetRestaurantUserProfile()
     {
         var response = await _authService.GetRestaurantUserProfile(HttpContext.User);

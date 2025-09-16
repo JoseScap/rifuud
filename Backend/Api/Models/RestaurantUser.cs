@@ -16,7 +16,7 @@ public class RestaurantUser : BaseRestaurantEntity
         string firstName, string lastName, string phone,
         bool isActive, RestaurantUserRole? role, string username,
         string password, string restaurantSubdomain,
-        Restaurant? restaurant = null)
+        Restaurant restaurant)
     {
         FirstName = firstName;
         LastName = lastName;

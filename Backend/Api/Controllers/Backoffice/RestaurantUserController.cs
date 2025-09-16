@@ -14,13 +14,18 @@ namespace Api.Controllers.Backoffice;
 [ApiController]
 [Route("Backoffice/[controller]")]
 [Authorize(AuthenticationSchemes = "AdminUser")]
+[ValidateBackofficeSubdomain]
 public class RestaurantUserController : BaseController
 {
     private readonly IRestaurantUserService _restaurantUserService;
     private readonly ILogger<RestaurantUserController> _logger;
     
-    public RestaurantUserController(IRestaurantUserService restaurantUserService, ILogger<RestaurantUserController> logger, ISubdomainService subdomainService) 
-        : base(subdomainService)
+    public RestaurantUserController(
+        IRestaurantUserService restaurantUserService,
+        ILogger<RestaurantUserController> logger,
+        ISubdomainService subdomainService,
+        IConfiguration configuration) 
+        : base(subdomainService, configuration)
     {
         _restaurantUserService = restaurantUserService;
         _logger = logger;
