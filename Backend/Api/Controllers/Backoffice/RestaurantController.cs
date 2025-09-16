@@ -106,4 +106,61 @@ public class RestaurantController : BaseController
         var response = await _restaurantService.ToggleRestaurantStatusAsync(id, false);
         return Ok(response);
     }
+
+    /// <summary>
+    /// Create a new restaurant user
+    /// </summary>
+    /// <param name="request">Restaurant user creation data</param>
+    /// <returns>Created restaurant user information</returns>
+    [HttpPost]
+    [ProducesResponseType(typeof(CreateRestaurantUserResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    public async Task<IActionResult> CreateRestaurantUser([FromBody] CreateRestaurantUserRequest request)
+    {
+        var response = await _restaurantService.CreateRestaurantUserAsync(request);
+
+        _logger.LogInformation("Restaurant user '{Username}' created successfully for restaurant '{RestaurantId}'", 
+            response.Username, response.RestaurantId);
+
+        return CreatedAtAction(nameof(CreateRestaurantUser), new { id = response.Id }, response);
+    }
+
+    /// <summary>
+    /// Get a restaurant user by ID
+    /// </summary>
+    /// <param name="restaurantId">Restaurant ID</param>
+    /// <param name="userId">Restaurant user ID</param>
+    /// <returns>Restaurant user information</returns>
+    [HttpGet("{restaurantId}/Users/{userId}")]
+    [ProducesResponseType(typeof(ListOneRestaurantUserResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetRestaurantUserById(Guid restaurantId, Guid userId)
+    {
+        var response = await _restaurantService.GetRestaurantUserByIdAndRestaurantIdAsync(restaurantId, userId);
+
+        _logger.LogInformation("Restaurant user '{Username}' retrieved successfully", response.Username);
+
+        return Ok(response);
+    }
+
+    /// <summary>
+    /// Get all restaurant users
+    /// </summary>
+    /// <param name="restaurantId">Restaurant ID</param>
+    /// <returns>List of all restaurant users</returns>
+    [HttpGet("{restaurantId}/Users")]
+    [ProducesResponseType(typeof(ListManyRestaurantUsersResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> GetManyRestaurantUsers(Guid restaurantId)
+    {
+        var response = await _restaurantService.GetManyRestaurantUsersByRestaurantIdAsync(restaurantId);
+
+        _logger.LogInformation("Retrieved {Count} restaurant users successfully", response.RestaurantUsers.Count);
+
+        return Ok(response);
+    }
 }
