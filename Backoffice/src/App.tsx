@@ -5,6 +5,7 @@ import { HomePage } from './pages/home/home-page'
 import { LoginPage } from './pages/login/login-page'
 import { DashboardPage } from './pages/dashboard/dashboard-page'
 import { RestaurantsPage } from './pages/restaurants/restaurants-page'
+import { RestaurantDetailsPage } from './pages/restaurants/restaurant-details-page'
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/restaurants" element={<RestaurantsPage />} />
+            <Route path="/restaurants/:id" element={<RestaurantDetailsPage />} />
           </Routes>
         </AuthProvider>
       </BrowserRouter>
