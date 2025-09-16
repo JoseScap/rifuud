@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 type AuthContextType = {
@@ -22,6 +22,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const login = (token: string) => {
     setToken(token);
+    sessionStorage.setItem('authToken', token);
     setIsAuthenticated(true);
     navigate("/dashboard");
   };
@@ -29,7 +30,20 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const logout = () => {
     setToken(null);
     setIsAuthenticated(false);
+    navigate("/login");
   };
+
+  useEffect(() => {
+    const token = sessionStorage.getItem('authToken');
+    if (token) {
+      setToken(token);
+      setIsAuthenticated(true);
+    } else {
+      setIsAuthenticated(false);
+      setToken(null);
+      navigate("/login");
+    }
+  }, []);
 
   return (
     <AuthContext.Provider value={{ token, isAuthenticated, login, logout }}>

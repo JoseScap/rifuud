@@ -32,7 +32,6 @@ export function LoginForm({
         <CardContent>
           <form onSubmit={(e) => {
             e.preventDefault();
-            console.log("Username:", username, "Password:", password);
             onSubmit(username, password);
           }}>
             <div className="grid gap-6">
