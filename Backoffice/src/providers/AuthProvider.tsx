@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 type AuthContextType = {
@@ -6,6 +6,7 @@ type AuthContextType = {
   isAuthenticated: boolean;
   login: (token: string) => void;
   logout: () => void;
+  checkAuth: () => void;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>({
@@ -13,40 +14,49 @@ const AuthContext = createContext<AuthContextType | undefined>({
   isAuthenticated: false,
   login: () => {},
   logout: () => {},
+  checkAuth: () => {},
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [token, setToken] = useState<string | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const isAuthenticated = useMemo(() => {
+    return token !== null;
+  }, [token]);
   const navigate = useNavigate();
 
   const login = (token: string) => {
     setToken(token);
     sessionStorage.setItem('authToken', token);
-    setIsAuthenticated(true);
     navigate("/dashboard");
   };
 
   const logout = () => {
     setToken(null);
-    setIsAuthenticated(false);
     navigate("/login");
   };
 
-  useEffect(() => {
+  const checkAuth = () => {
     const token = sessionStorage.getItem('authToken');
     if (token) {
       setToken(token);
-      setIsAuthenticated(true);
     } else {
-      setIsAuthenticated(false);
       setToken(null);
       navigate("/login");
     }
-  }, []);
+  }
+
+  useEffect(() => {
+    checkAuth();
+  }, [token]);
 
   return (
-    <AuthContext.Provider value={{ token, isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{
+      token,
+      isAuthenticated,
+      login,
+      logout,
+      checkAuth,
+    }}>
       {children}
     </AuthContext.Provider>
   );

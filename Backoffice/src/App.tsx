@@ -3,6 +3,7 @@ import './App.css'
 import { AuthProvider } from './providers/AuthProvider'
 import { HomePage } from './pages/home/home-page'
 import { LoginPage } from './pages/login/login-page'
+import { DashboardPage } from './pages/dashboard/dashboard-page'
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
           </Routes>
         </AuthProvider>
       </BrowserRouter>
