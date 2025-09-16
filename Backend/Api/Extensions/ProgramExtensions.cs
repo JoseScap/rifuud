@@ -18,7 +18,6 @@ namespace Api.Extensions
         {
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IRestaurantService, RestaurantService>();
-            services.AddScoped<IRestaurantUserService, RestaurantUserService>();
             services.AddScoped<IStartupService, StartupService>();
             services.AddScoped<ISubdomainService, SubdomainService>();
             services.AddHttpContextAccessor();
