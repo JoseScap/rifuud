@@ -9,7 +9,7 @@ WORKDIR /app
 
 # Install dependencies based on the preferred package manager
 COPY package.json package-lock.json* ./
-RUN npm ci --only=production
+RUN npm ci
 
 # Rebuild the source code only when needed
 FROM base AS builder
@@ -24,11 +24,14 @@ RUN npm run build
 FROM base AS runner
 WORKDIR /app
 
-ENV NODE_ENV production
+ENV NODE_ENV=production
 
 # Create a non-root user
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
+
+# Install serve globally (as root)
+RUN npm install -g serve
 
 # Copy the built application
 COPY --from=builder /app/dist ./dist
@@ -39,13 +42,9 @@ RUN chown -R nextjs:nodejs /app
 USER nextjs
 
 # Expose the port the app runs on
-EXPOSE 3000
+EXPOSE $PORT
 
-ENV PORT 3000
-ENV HOSTNAME "0.0.0.0"
+ENV HOSTNAME="0.0.0.0"
 
-# Install serve to run the production build
-RUN npm install -g serve
-
-# Start the application
-CMD ["serve", "-s", "dist", "-l", "3000"]
+# Start the application using serve directly
+CMD ["sh", "-c", "serve -s dist -l $PORT"]
