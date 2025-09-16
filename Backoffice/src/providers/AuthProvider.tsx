@@ -36,6 +36,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const logout = () => {
     setToken(null);
+    sessionStorage.removeItem('authToken');
     navigate("/login");
   };
 

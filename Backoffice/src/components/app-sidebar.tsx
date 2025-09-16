@@ -1,5 +1,6 @@
 import * as React from "react"
 import {
+  IconBuilding,
   IconDashboard,
   IconHelp,
   IconInnerShadowTop,
@@ -28,9 +29,14 @@ const data = {
   navMain: [
     {
       title: "Dashboard",
-      url: "#",
+      url: "/dashboard",
       icon: IconDashboard,
-    }
+    },
+    {
+      title: "Restaurants",
+      url: "/restaurants",
+      icon: IconBuilding,
+    },
   ],
   navSecondary: [
     {
