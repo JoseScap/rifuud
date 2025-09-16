@@ -25,6 +25,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate();
 
   const login = (token: string) => {
+    if (!token) {
+      return;
+    }
+
     setToken(token);
     sessionStorage.setItem('authToken', token);
     navigate("/dashboard");
