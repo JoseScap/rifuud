@@ -20,13 +20,18 @@ const routeMap: Record<string, BreadcrumbItem[]> = {
   '/restaurants': [
     { label: 'Dashboard', href: '/dashboard' },
     { label: 'Restaurants' }
+  ],
+  '/restaurants/create': [
+    { label: 'Dashboard', href: '/dashboard' },
+    { label: 'Restaurants', href: '/restaurants' },
+    { label: 'Create Restaurant' }
   ]
 };
 
 // Function to generate breadcrumb for dynamic routes
 const generateBreadcrumbForRoute = (pathname: string): BreadcrumbItem[] => {
-  // Handle restaurant details route
-  if (pathname.startsWith('/restaurants/') && pathname !== '/restaurants') {
+  // Handle restaurant details route (but not create route)
+  if (pathname.startsWith('/restaurants/') && pathname !== '/restaurants' && pathname !== '/restaurants/create') {
     return [
       { label: 'Dashboard', href: '/dashboard' },
       { label: 'Restaurants', href: '/restaurants' },

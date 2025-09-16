@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Eye } from "lucide-react";
+import { Eye, Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 export function RestaurantsPage() {
@@ -42,10 +42,18 @@ export function RestaurantsPage() {
   return (
     <ProtectedPageLayout>
       <div className="p-6">
-        <h1 className="text-2xl font-bold mb-4">Restaurants</h1>
-        <p className="text-muted-foreground mb-6">
-          Manage your restaurants here. Found {restaurants.length} restaurants.
-        </p>
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h1 className="text-2xl font-bold">Restaurants</h1>
+            <p className="text-muted-foreground">
+              Manage your restaurants here. Found {restaurants.length} restaurants.
+            </p>
+          </div>
+          <Button onClick={() => navigate("/restaurants/create")}>
+            <Plus className="h-4 w-4 mr-2" />
+            Create Restaurant
+          </Button>
+        </div>
         
         <div className="rounded-md border">
           <Table>

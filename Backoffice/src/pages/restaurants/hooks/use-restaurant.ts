@@ -41,6 +41,21 @@ export function useRestaurant() {
     }
   };
 
+  const createRestaurant = async (restaurantData: { name: string; subdomain: string; isActive: boolean }) => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await apiClient.post<Restaurant>("/Backoffice/Restaurant", restaurantData);
+      return response.data;
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to create restaurant");
+      console.error("Error creating restaurant:", err);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return {
     restaurants,
     loading,
@@ -61,6 +76,7 @@ export function useRestaurant() {
           setLoading(false);
         });
     },
-    fetchRestaurantById
+    fetchRestaurantById,
+    createRestaurant
   };
 }
