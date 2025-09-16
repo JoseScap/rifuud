@@ -10,12 +10,37 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Eye, Plus } from "lucide-react";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Eye, Plus, Power, PowerOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 export function RestaurantsPage() {
-  const { restaurants, loading, error } = useRestaurant();
+  const { restaurants, loading, error, activateRestaurant, deactivateRestaurant } = useRestaurant();
   const navigate = useNavigate();
+  const [actionLoading, setActionLoading] = useState<string | null>(null);
+
+  const handleActivate = async (id: string) => {
+    try {
+      setActionLoading(id);
+      await activateRestaurant(id);
+    } catch (err) {
+      console.error("Failed to activate restaurant:", err);
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const handleDeactivate = async (id: string) => {
+    try {
+      setActionLoading(id);
+      await deactivateRestaurant(id);
+    } catch (err) {
+      console.error("Failed to deactivate restaurant:", err);
+    } finally {
+      setActionLoading(null);
+    }
+  };
 
   if (loading) {
     return (
@@ -91,22 +116,101 @@ export function RestaurantsPage() {
                     <TableCell>{new Date(restaurant.createdAt).toLocaleDateString()}</TableCell>
                     <TableCell>{new Date(restaurant.updatedAt).toLocaleDateString()}</TableCell>
                     <TableCell>
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => navigate(`/restaurants/${restaurant.id}`)}
-                            >
-                              <Eye className="h-4 w-4" />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>See Details</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
+                      <div className="flex items-center gap-2">
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => navigate(`/restaurants/${restaurant.id}`)}
+                              >
+                                <Eye className="h-4 w-4" />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>See Details</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+
+                        {restaurant.isActive ? (
+                          <Dialog>
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <DialogTrigger asChild>
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      disabled={actionLoading === restaurant.id}
+                                    >
+                                      <PowerOff className="h-4 w-4 text-red-500" />
+                                    </Button>
+                                  </DialogTrigger>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>Deactivate Restaurant</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                            <DialogContent>
+                              <DialogHeader>
+                                <DialogTitle>Deactivate Restaurant</DialogTitle>
+                                <DialogDescription>
+                                  Are you sure you want to deactivate "{restaurant.name}"? This action will make the restaurant unavailable to customers.
+                                </DialogDescription>
+                              </DialogHeader>
+                              <DialogFooter>
+                                <Button
+                                  variant="destructive"
+                                  onClick={() => handleDeactivate(restaurant.id)}
+                                  disabled={actionLoading === restaurant.id}
+                                >
+                                  {actionLoading === restaurant.id ? "Deactivating..." : "Deactivate"}
+                                </Button>
+                              </DialogFooter>
+                            </DialogContent>
+                          </Dialog>
+                        ) : (
+                          <Dialog>
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <DialogTrigger asChild>
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      disabled={actionLoading === restaurant.id}
+                                    >
+                                      <Power className="h-4 w-4 text-green-500" />
+                                    </Button>
+                                  </DialogTrigger>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>Activate Restaurant</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                            <DialogContent>
+                              <DialogHeader>
+                                <DialogTitle>Activate Restaurant</DialogTitle>
+                                <DialogDescription>
+                                  Are you sure you want to activate "{restaurant.name}"? This will make the restaurant available to customers.
+                                </DialogDescription>
+                              </DialogHeader>
+                              <DialogFooter>
+                                <Button
+                                  onClick={() => handleActivate(restaurant.id)}
+                                  disabled={actionLoading === restaurant.id}
+                                >
+                                  {actionLoading === restaurant.id ? "Activating..." : "Activate"}
+                                </Button>
+                              </DialogFooter>
+                            </DialogContent>
+                          </Dialog>
+                        )}
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))

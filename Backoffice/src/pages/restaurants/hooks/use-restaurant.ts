@@ -56,27 +56,63 @@ export function useRestaurant() {
     }
   };
 
+  const refetchRestaurants = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await apiClient.get<RestaurantListManyResponse>("/Backoffice/Restaurant");
+      setRestaurants(response.data.restaurants);
+      return response.data;
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to fetch restaurants");
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const activateRestaurant = async (id: string) => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await apiClient.post<Restaurant>(`/Backoffice/Restaurant/${id}/activate`);
+      // Refetch all restaurants to get the updated state
+      await refetchRestaurants();
+      return response.data;
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to activate restaurant");
+      console.error("Error activating restaurant:", err);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const deactivateRestaurant = async (id: string) => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await apiClient.post<Restaurant>(`/Backoffice/Restaurant/${id}/deactivate`);
+      // Refetch all restaurants to get the updated state
+      await refetchRestaurants();
+      return response.data;
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to deactivate restaurant");
+      console.error("Error deactivating restaurant:", err);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return {
     restaurants,
     loading,
     error,
-    refetch: () => {
-      setLoading(true);
-      setError(null);
-      return apiClient.get<RestaurantListManyResponse>("/Backoffice/Restaurant")
-        .then(response => {
-          setRestaurants(response.data.restaurants);
-          return response.data;
-        })
-        .catch(err => {
-          setError(err instanceof Error ? err.message : "Failed to fetch restaurants");
-          throw err;
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    },
+    refetch: refetchRestaurants,
     fetchRestaurantById,
-    createRestaurant
+    createRestaurant,
+    activateRestaurant,
+    deactivateRestaurant
   };
 }
