@@ -57,9 +57,9 @@ public class AuthController : BaseController
     [ProducesResponseType(typeof(AdminProfileResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ValidateBackofficeSubdomain]
-    public async Task<IActionResult> GetAdminUserProfile()
+    public IActionResult GetAdminUserProfile()
     {
-        var response = await _authService.GetAdminUserProfile(HttpContext.User);
+        var response = _authService.GetAdminUserProfile(HttpContext.User);
         return Ok(response);
     }
 
@@ -92,9 +92,9 @@ public class AuthController : BaseController
     [ProducesResponseType(typeof(RestaurantProfileResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ValidateRestaurantSubdomain]
-    public async Task<IActionResult> GetRestaurantUserProfile()
+    public IActionResult GetRestaurantUserProfile()
     {
-        var response = await _authService.GetRestaurantUserProfile(HttpContext.User);
+        var response = _authService.GetRestaurantUserProfile(HttpContext.User);
         return Ok(response);
     }
 

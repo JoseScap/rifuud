@@ -54,7 +54,7 @@ public class RestaurantUserService : IRestaurantUserService
         }
 
         // Validate password
-        var isPasswordValid = await _authService.ValidateRestaurantUserPassword(request.Password);
+        var isPasswordValid = _authService.ValidateRestaurantUserPassword(request.Password);
         if (!isPasswordValid)
         {
             throw new BadRequestError(
@@ -65,7 +65,7 @@ public class RestaurantUserService : IRestaurantUserService
         }
 
         // Hash password
-        var hashedPassword = await _authService.HashRestaurantUserPassword(request.Password);
+        var hashedPassword = _authService.HashRestaurantUserPassword(request.Password);
         request.Password = hashedPassword;
 
         // Create new restaurant user

@@ -6,19 +6,19 @@ namespace Api.Services.Interfaces;
 
 public interface IAuthService
 {
-    Task<bool> ValidateAdminUserPassword(string password);
-    Task<string> HashAdminUserPassword(string password);
-    Task<bool> VerifyAdminUserPassword(string password, string hashedPassword);
-    Task<string> GenerateAdminUserJwtToken(AdminUser user);
+    bool ValidateAdminUserPassword(string password);
+    string HashAdminUserPassword(string password);
+    bool VerifyAdminUserPassword(string password, string hashedPassword);
+    string GenerateAdminUserJwtToken(AdminUser user);
     Task<LoginAdminUserResponse> LoginAdminUser(string username, string password);
-    Task<bool> ValidateAdminUserJwtToken(string token);
-    Task<AdminProfileResponse> GetAdminUserProfile(ClaimsPrincipal user);
+    bool ValidateAdminUserJwtToken(string token);
+    AdminProfileResponse GetAdminUserProfile(ClaimsPrincipal user);
 
-    Task<bool> ValidateRestaurantUserPassword(string password);
-    Task<string> HashRestaurantUserPassword(string password);
-    Task<bool> VerifyRestaurantUserPassword(string password, string hashedPassword);
-    Task<string> GenerateRestaurantUserJwtToken(RestaurantUser user);
+    bool ValidateRestaurantUserPassword(string password);
+    string HashRestaurantUserPassword(string password);
+    bool VerifyRestaurantUserPassword(string password, string hashedPassword);
+    string GenerateRestaurantUserJwtToken(RestaurantUser user);
     Task<LoginRestaurantUserResponse> LoginRestaurantUser(string username, string password);
-    Task<bool> ValidateRestaurantUserJwtToken(string token);
-    Task<RestaurantProfileResponse> GetRestaurantUserProfile(ClaimsPrincipal user);
+    bool ValidateRestaurantUserJwtToken(string token);
+    RestaurantProfileResponse GetRestaurantUserProfile(ClaimsPrincipal user);
 }

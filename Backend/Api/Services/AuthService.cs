@@ -26,41 +26,41 @@ public class AuthService : IAuthService
         _subdomain = subdomainService.Subdomain;
     }
 
-    public Task<bool> ValidateAdminUserPassword(string password)
+    public bool ValidateAdminUserPassword(string password)
     {
         // Check minimum length
         if (password.Length < 12)
         {
-            return Task.FromResult(false);
+            return false;
         }
 
         // Check for uppercase letter
         if (!Regex.IsMatch(password, @"[A-Z]"))
         {
-            return Task.FromResult(false);
+            return false;
         }
 
         // Check for lowercase letter
         if (!Regex.IsMatch(password, @"[a-z]"))
         {
-            return Task.FromResult(false);
+            return false;
         }
 
         // Check for number
         if (!Regex.IsMatch(password, @"[0-9]"))
         {
-            return Task.FromResult(false);
+            return false;
         }
 
         // Check for alphanumeric only (no special characters)
         if (!Regex.IsMatch(password, @"^[a-zA-Z0-9]+$"))
         {
-            return Task.FromResult(false);
+            return false;
         }
 
-        return Task.FromResult(true);
+        return true;
     }
-    public Task<string> HashAdminUserPassword(string password)
+    public string HashAdminUserPassword(string password)
     {
         using var rng = RandomNumberGenerator.Create();
         var saltBytes = new byte[32];
@@ -79,16 +79,16 @@ public class AuthService : IAuthService
         var hashBase64 = Convert.ToBase64String(hashBytes);
         var result = $"{saltBase64}:{hashBase64}";
         
-        return Task.FromResult(result);
+        return result;
     }
 
-    public Task<bool> VerifyAdminUserPassword(string password, string hashedPassword)
+    public bool VerifyAdminUserPassword(string password, string hashedPassword)
     {
         try
         {
             var parts = hashedPassword.Split(':');
             if (parts.Length != 2)
-                return Task.FromResult(false);
+                return false;
             
             var saltBytes = Convert.FromBase64String(parts[0]);
             var storedHashBytes = Convert.FromBase64String(parts[1]);
@@ -102,15 +102,15 @@ public class AuthService : IAuthService
             using var sha256 = SHA256.Create();
             var computedHashBytes = sha256.ComputeHash(combinedBytes);
             
-            return Task.FromResult(computedHashBytes.SequenceEqual(storedHashBytes));
+            return computedHashBytes.SequenceEqual(storedHashBytes);
         }
         catch
         {
-            return Task.FromResult(false);
+            return false;
         }
     }
 
-    public Task<string> GenerateAdminUserJwtToken(AdminUser user)
+    public string GenerateAdminUserJwtToken(AdminUser user)
     {
         var jwtKey = _configuration["Authentication:Jwt:AdminUser:SecretKey"] ?? "tu_clave_secreta_muy_larga_y_segura_para_jwt_admin_2024";
         var jwtIssuer = _configuration["Authentication:Jwt:AdminUser:Issuer"] ?? "RifuudApi";
@@ -138,7 +138,7 @@ public class AuthService : IAuthService
         );
 
         var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
-        return Task.FromResult(tokenString);
+        return tokenString;
     }
 
     public async Task<LoginAdminUserResponse> LoginAdminUser(string username, string password)
@@ -157,7 +157,7 @@ public class AuthService : IAuthService
         }
 
         // Verificar la contraseña
-        var isPasswordValid = await VerifyAdminUserPassword(password, user.Password);
+        var isPasswordValid = VerifyAdminUserPassword(password, user.Password);
         if (!isPasswordValid)
         {
             throw new UnauthorizedError(
@@ -168,7 +168,7 @@ public class AuthService : IAuthService
         }
 
         // Generar token JWT
-        var accessToken = await GenerateAdminUserJwtToken(user);
+        var accessToken = GenerateAdminUserJwtToken(user);
 
         return new LoginAdminUserResponse
         {
@@ -176,7 +176,7 @@ public class AuthService : IAuthService
         };
     }
 
-    public Task<bool> ValidateAdminUserJwtToken(string token)
+    public bool ValidateAdminUserJwtToken(string token)
     {
         try
         {
@@ -200,15 +200,15 @@ public class AuthService : IAuthService
             };
 
             tokenHandler.ValidateToken(token, validationParameters, out SecurityToken validatedToken);
-            return Task.FromResult(true);
+            return true;
         }
         catch
         {
-            return Task.FromResult(false);
+            return false;
         }
     }
 
-    public Task<ClaimsPrincipal?> GetAdminUserFromJwtToken(string token)
+    public ClaimsPrincipal? GetAdminUserFromJwtToken(string token)
     {
         try
         {
@@ -232,51 +232,50 @@ public class AuthService : IAuthService
             };
 
             var principal = tokenHandler.ValidateToken(token, validationParameters, out SecurityToken validatedToken);
-            return Task.FromResult<ClaimsPrincipal?>(principal);
+            return principal;
         }
         catch
         {
-            return Task.FromResult<ClaimsPrincipal?>(null);
+            return null;
         }
     }
 
-    // RestaurantUser Authentication Methods
-    public Task<bool> ValidateRestaurantUserPassword(string password)
+    public bool ValidateRestaurantUserPassword(string password)
     {
         // Check minimum length
         if (password.Length < 8)
         {
-            return Task.FromResult(false);
+            return false;
         }
 
         // Check for uppercase letter
         if (!Regex.IsMatch(password, @"[A-Z]"))
         {
-            return Task.FromResult(false);
+            return false;
         }
 
         // Check for lowercase letter
         if (!Regex.IsMatch(password, @"[a-z]"))
         {
-            return Task.FromResult(false);
+            return false;
         }
 
         // Check for number
         if (!Regex.IsMatch(password, @"[0-9]"))
         {
-            return Task.FromResult(false);
+            return false;
         }
 
         // Check for alphanumeric only (no special characters)
         if (!Regex.IsMatch(password, @"^[a-zA-Z0-9]+$"))
         {
-            return Task.FromResult(false);
+            return false;
         }
 
-        return Task.FromResult(true);
+        return true;
     }
 
-    public Task<string> HashRestaurantUserPassword(string password)
+    public string HashRestaurantUserPassword(string password)
     {
         using var rng = RandomNumberGenerator.Create();
         var saltBytes = new byte[32];
@@ -295,16 +294,16 @@ public class AuthService : IAuthService
         var hashBase64 = Convert.ToBase64String(hashBytes);
         var result = $"{saltBase64}:{hashBase64}";
         
-        return Task.FromResult(result);
+        return result;
     }
 
-    public Task<bool> VerifyRestaurantUserPassword(string password, string hashedPassword)
+    public bool VerifyRestaurantUserPassword(string password, string hashedPassword)
     {
         try
         {
             var parts = hashedPassword.Split(':');
             if (parts.Length != 2)
-                return Task.FromResult(false);
+                return false;
             
             var saltBytes = Convert.FromBase64String(parts[0]);
             var storedHashBytes = Convert.FromBase64String(parts[1]);
@@ -318,15 +317,15 @@ public class AuthService : IAuthService
             using var sha256 = SHA256.Create();
             var computedHashBytes = sha256.ComputeHash(combinedBytes);
             
-            return Task.FromResult(computedHashBytes.SequenceEqual(storedHashBytes));
+            return computedHashBytes.SequenceEqual(storedHashBytes);
         }
         catch
         {
-            return Task.FromResult(false);
+            return false;
         }
     }
 
-    public Task<string> GenerateRestaurantUserJwtToken(RestaurantUser user)
+    public string GenerateRestaurantUserJwtToken(RestaurantUser user)
     {
         var jwtKey = _configuration["Authentication:Jwt:RestaurantUser:SecretKey"] ?? "tu_clave_secreta_muy_larga_y_segura_para_jwt_restaurant_2024";
         var jwtIssuer = _configuration["Authentication:Jwt:RestaurantUser:Issuer"] ?? "RifuudApi";
@@ -357,7 +356,7 @@ public class AuthService : IAuthService
         );
 
         var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
-        return Task.FromResult(tokenString);
+        return tokenString;
     }
 
     public async Task<LoginRestaurantUserResponse> LoginRestaurantUser(string username, string password)
@@ -376,7 +375,7 @@ public class AuthService : IAuthService
         }
 
         // Verificar la contraseña
-        var isPasswordValid = await VerifyRestaurantUserPassword(password, user.Password);
+        var isPasswordValid = VerifyRestaurantUserPassword(password, user.Password);
         if (!isPasswordValid)
         {
             throw new UnauthorizedError(
@@ -387,12 +386,12 @@ public class AuthService : IAuthService
         }
 
         // Generar token JWT
-        var accessToken = await GenerateRestaurantUserJwtToken(user);
+        var accessToken = GenerateRestaurantUserJwtToken(user);
 
         return new LoginRestaurantUserResponse(accessToken);
     }
 
-    public Task<bool> ValidateRestaurantUserJwtToken(string token)
+    public bool ValidateRestaurantUserJwtToken(string token)
     {
         try
         {
@@ -416,15 +415,15 @@ public class AuthService : IAuthService
             };
 
             tokenHandler.ValidateToken(token, validationParameters, out SecurityToken validatedToken);
-            return Task.FromResult(true);
+            return true;
         }
         catch
         {
-            return Task.FromResult(false);
+            return false;
         }
     }
 
-    public Task<ClaimsPrincipal?> GetRestaurantUserFromJwtToken(string token)
+    public ClaimsPrincipal? GetRestaurantUserFromJwtToken(string token)
     {
         try
         {
@@ -448,15 +447,15 @@ public class AuthService : IAuthService
             };
 
             var principal = tokenHandler.ValidateToken(token, validationParameters, out SecurityToken validatedToken);
-            return Task.FromResult<ClaimsPrincipal?>(principal);
+            return principal;
         }
         catch
         {
-            return Task.FromResult<ClaimsPrincipal?>(null);
+            return null;
         }
     }
 
-    public Task<AdminProfileResponse> GetAdminUserProfile(ClaimsPrincipal user)
+    public AdminProfileResponse GetAdminUserProfile(ClaimsPrincipal user)
     {
         var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
         var username = user.FindFirst(ClaimTypes.Name)?.Value ?? string.Empty;
@@ -470,10 +469,10 @@ public class AuthService : IAuthService
             user.Identity?.IsAuthenticated ?? false
         );
 
-        return Task.FromResult(response);
+        return response;
     }
 
-    public Task<RestaurantProfileResponse> GetRestaurantUserProfile(ClaimsPrincipal user)
+    public RestaurantProfileResponse GetRestaurantUserProfile(ClaimsPrincipal user)
     {
         var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
         var username = user.FindFirst(ClaimTypes.Name)?.Value ?? string.Empty;
@@ -491,6 +490,6 @@ public class AuthService : IAuthService
             restaurantSubdomain
         );
 
-        return Task.FromResult(response);
+        return response;
     }
 }

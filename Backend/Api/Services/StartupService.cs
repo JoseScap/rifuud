@@ -49,7 +49,7 @@ public class StartupService : IStartupService
         }
 
         // Validate password format
-        var isPasswordValid = await _authService.ValidateAdminUserPassword(rootPassword);
+        var isPasswordValid = _authService.ValidateAdminUserPassword(rootPassword);
         if (!isPasswordValid)
         {
             throw new InternalServerError(
@@ -59,7 +59,7 @@ public class StartupService : IStartupService
             );
         }
 
-        var hashedPassword = await _authService.HashAdminUserPassword(rootPassword);
+        var hashedPassword = _authService.HashAdminUserPassword(rootPassword);
 
         var rootUser = new AdminUser
         {
