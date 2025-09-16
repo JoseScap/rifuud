@@ -18,6 +18,12 @@ public class RifuudDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
         
+        // Configure BaseEntity properties for all entities
+        ConfigureBaseEntity<AdminUser>(modelBuilder);
+        ConfigureBaseEntity<Restaurant>(modelBuilder);
+        ConfigureBaseEntity<RestaurantUser>(modelBuilder);
+        ConfigureBaseEntity<ProductCategory>(modelBuilder);
+        
         modelBuilder.Entity<AdminUser>(entity =>
         {
             entity.HasKey(u => u.Id);
@@ -82,6 +88,19 @@ public class RifuudDbContext : DbContext
                   .HasForeignKey(pc => pc.RestaurantSubdomain)
                   .HasPrincipalKey(r => r.Subdomain)
                   .OnDelete(DeleteBehavior.Restrict);
+        });
+    }
+
+    /// <summary>
+    /// Configure BaseEntity properties for automatic generation
+    /// </summary>
+    private void ConfigureBaseEntity<T>(ModelBuilder modelBuilder) where T : BaseEntity
+    {
+        modelBuilder.Entity<T>(entity =>
+        {
+            entity.Property(e => e.Id)
+                  .ValueGeneratedOnAdd()
+                  .HasDefaultValueSql("gen_random_uuid()");
         });
     }
 }
