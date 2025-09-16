@@ -343,7 +343,7 @@ public class AuthService : IAuthService
             new Claim(ClaimTypes.Role, user.Role?.ToString() ?? "User"),
             new Claim("role", user.Role?.ToString() ?? "NoRole"),
             new Claim("username", user.Username),
-            new Claim("restaurantId", user.RestaurantId.ToString()),
+            new Claim("restaurantId", user.Restaurant?.Id.ToString() ?? string.Empty),
             new Claim("restaurantSubdomain", user.RestaurantSubdomain),
             new Claim("userType", "RestaurantUser")
         };

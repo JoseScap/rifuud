@@ -35,7 +35,7 @@ public class RestaurantService : IRestaurantService
             );
         }
 
-        var restaurant = Restaurant.FromRequest(request);
+        var restaurant = request.ToRestaurant();
         
 
         _context.Restaurants.Add(restaurant);

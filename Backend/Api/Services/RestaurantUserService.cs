@@ -69,7 +69,7 @@ public class RestaurantUserService : IRestaurantUserService
         request.Password = hashedPassword;
 
         // Create new restaurant user
-        var restaurantUser = RestaurantUser.FromRequest(request, restaurant);
+        var restaurantUser = request.ToRestaurantUser(restaurant);
 
         _context.RestaurantUsers.Add(restaurantUser);
         await _context.SaveChangesAsync();

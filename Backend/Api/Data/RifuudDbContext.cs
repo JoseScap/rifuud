@@ -12,6 +12,8 @@ public class RifuudDbContext : DbContext
     public DbSet<AdminUser> AdminUsers { get; set; }
     public DbSet<Restaurant> Restaurants { get; set; }
     public DbSet<RestaurantUser> RestaurantUsers { get; set; }
+    public DbSet<ProductCategory> ProductCategories { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -49,15 +51,36 @@ public class RifuudDbContext : DbContext
             entity.Property(ru => ru.Role).IsRequired();
             entity.Property(ru => ru.Username).IsRequired().HasMaxLength(255);
             entity.Property(ru => ru.Password).IsRequired().HasMaxLength(1024);
-            entity.Property(ru => ru.RestaurantId).IsRequired();
             entity.Property(ru => ru.RestaurantSubdomain).IsRequired().HasMaxLength(255);
             entity.Property(ru => ru.CreatedAt).IsRequired().HasDefaultValueSql("NOW()");
             entity.Property(ru => ru.UpdatedAt).IsRequired().HasDefaultValueSql("NOW()").ValueGeneratedOnAddOrUpdate();
 
             entity.HasIndex(ru => new { ru.RestaurantSubdomain, ru.Username }).IsUnique();
+            
             entity.HasOne(ru => ru.Restaurant)
                   .WithMany(r => r.RestaurantUsers)
-                  .HasForeignKey(ru => ru.RestaurantId)
+                  .HasForeignKey(ru => ru.RestaurantSubdomain)
+                  .HasPrincipalKey(r => r.Subdomain)
+                  .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<ProductCategory>(entity =>
+        {
+            entity.HasKey(pc => pc.Id);
+            entity.Property(pc => pc.Name).IsRequired().HasMaxLength(255);
+            entity.Property(pc => pc.Description).IsRequired().HasMaxLength(255);
+            entity.Property(pc => pc.Color).IsRequired().HasMaxLength(255);
+            entity.Property(pc => pc.IsActive).IsRequired().HasDefaultValue(true);
+            entity.Property(pc => pc.RestaurantSubdomain).IsRequired().HasMaxLength(255);
+            entity.Property(pc => pc.CreatedAt).IsRequired().HasDefaultValueSql("NOW()");
+            entity.Property(pc => pc.UpdatedAt).IsRequired().HasDefaultValueSql("NOW()").ValueGeneratedOnAddOrUpdate();
+
+            entity.HasIndex(pc => new { pc.RestaurantSubdomain, pc.Name }).IsUnique();
+            
+            entity.HasOne(pc => pc.Restaurant)
+                  .WithMany(r => r.ProductCategories)
+                  .HasForeignKey(pc => pc.RestaurantSubdomain)
+                  .HasPrincipalKey(r => r.Subdomain)
                   .OnDelete(DeleteBehavior.Restrict);
         });
     }

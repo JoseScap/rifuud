@@ -57,6 +57,55 @@ namespace Api.Migrations
                     b.ToTable("AdminUsers");
                 });
 
+            modelBuilder.Entity("Api.Models.ProductCategory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Color")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("RestaurantSubdomain")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("NOW()");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RestaurantSubdomain", "Name")
+                        .IsUnique();
+
+                    b.ToTable("ProductCategories");
+                });
+
             modelBuilder.Entity("Api.Models.Restaurant", b =>
                 {
                     b.Property<Guid>("Id")
@@ -136,9 +185,6 @@ namespace Api.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
-                    b.Property<Guid>("RestaurantId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("RestaurantSubdomain")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -159,19 +205,30 @@ namespace Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RestaurantId");
-
                     b.HasIndex("RestaurantSubdomain", "Username")
                         .IsUnique();
 
                     b.ToTable("RestaurantUsers");
                 });
 
+            modelBuilder.Entity("Api.Models.ProductCategory", b =>
+                {
+                    b.HasOne("Api.Models.Restaurant", "Restaurant")
+                        .WithMany("ProductCategories")
+                        .HasForeignKey("RestaurantSubdomain")
+                        .HasPrincipalKey("Subdomain")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Restaurant");
+                });
+
             modelBuilder.Entity("Api.Models.RestaurantUser", b =>
                 {
                     b.HasOne("Api.Models.Restaurant", "Restaurant")
                         .WithMany("RestaurantUsers")
-                        .HasForeignKey("RestaurantId")
+                        .HasForeignKey("RestaurantSubdomain")
+                        .HasPrincipalKey("Subdomain")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -180,6 +237,8 @@ namespace Api.Migrations
 
             modelBuilder.Entity("Api.Models.Restaurant", b =>
                 {
+                    b.Navigation("ProductCategories");
+
                     b.Navigation("RestaurantUsers");
                 });
 #pragma warning restore 612, 618
