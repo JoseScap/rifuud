@@ -14,9 +14,11 @@ public class SubdomainService : ISubdomainService
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public string Subdomain => ExtractSubdomain(Host);
+    public string Subdomain => ExtractSubdomain(ClientHost);
 
     public string Host => _httpContextAccessor.HttpContext?.Request.Host.ToString() ?? string.Empty;
+    
+    public string ClientHost => GetClientHost();
 
     /// <summary>
     /// Extract subdomain from host
@@ -54,5 +56,49 @@ public class SubdomainService : ISubdomainService
 
         // Default to "localhost" for other cases
         return "localhost";
+    }
+
+    /// <summary>
+    /// Get the client's host from Origin or Referer header
+    /// </summary>
+    /// <returns>Client host or server host as fallback</returns>
+    private string GetClientHost()
+    {
+        var httpContext = _httpContextAccessor.HttpContext;
+        if (httpContext == null)
+            return string.Empty;
+
+        // Try to get the client host from Origin header first (for CORS requests)
+        var origin = httpContext.Request.Headers["Origin"].FirstOrDefault();
+        if (!string.IsNullOrEmpty(origin))
+        {
+            try
+            {
+                var uri = new Uri(origin);
+                return uri.Host + (uri.Port != 80 && uri.Port != 443 ? $":{uri.Port}" : "");
+            }
+            catch
+            {
+                // If Origin header is malformed, continue to next option
+            }
+        }
+
+        // Try to get the client host from Referer header (for regular requests)
+        var referer = httpContext.Request.Headers["Referer"].FirstOrDefault();
+        if (!string.IsNullOrEmpty(referer))
+        {
+            try
+            {
+                var uri = new Uri(referer);
+                return uri.Host + (uri.Port != 80 && uri.Port != 443 ? $":{uri.Port}" : "");
+            }
+            catch
+            {
+                // If Referer header is malformed, continue to next option
+            }
+        }
+
+        // Fallback to server host if no client host can be determined
+        return Host;
     }
 }

@@ -14,4 +14,9 @@ public interface ISubdomainService
     /// Gets the current request's host
     /// </summary>
     string Host { get; }
+    
+    /// <summary>
+    /// Gets the client's host from Origin/Referer headers
+    /// </summary>
+    string ClientHost { get; }
 }
