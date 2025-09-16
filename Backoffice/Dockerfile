@@ -17,6 +17,14 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
+ARG VITE_API_BASE_URL
+RUN if [ -z "$VITE_API_BASE_URL" ]; then \
+    echo "ERROR: VITE_API_BASE_URL is required but not provided"; \
+    echo "Please provide it using: docker build --build-arg VITE_API_BASE_URL=your-api-url ."; \
+    exit 1; \
+fi
+ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
+
 # Build the application
 RUN npm run build
 
