@@ -28,8 +28,14 @@ public abstract class BaseController : ControllerBase
     /// </summary>
     protected string Host => _subdomainService.Host;
 
+    [NonAction]
     public void ValidateBackofficeSubdomain()
     {
+        Console.WriteLine("Validating backoffice subdomain");
+        Console.WriteLine(Subdomain);
+        Console.WriteLine(Host);
+        Console.WriteLine(_configuration.GetValue<bool>("Development:AllowLocalhost"));
+
         if (Subdomain == "localhost" && _configuration.GetValue<bool>("Development:AllowLocalhost"))
         {
             return;
@@ -45,8 +51,14 @@ public abstract class BaseController : ControllerBase
         }
     }
 
+    [NonAction]
     public void ValidateRestaurantSubdomain()
     {
+        Console.WriteLine("Validating restaurant subdomain");
+        Console.WriteLine(Subdomain);
+        Console.WriteLine(Host);
+        Console.WriteLine(_configuration.GetValue<bool>("Development:AllowLocalhost"));
+
         if (Subdomain == "localhost" && _configuration.GetValue<bool>("Development:AllowLocalhost"))
         {
             return;
