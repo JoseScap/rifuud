@@ -2,15 +2,15 @@ using Api.Models;
 
 namespace Api.Dtos.Responses;
 
-public class CreateRestaurantResponse : BaseDtoResponse
+public class BaseRestaurantResponse : BaseDtoResponse
 {
     public string Name { get; set; } = string.Empty;
     public string Subdomain { get; set; } = string.Empty;
     public bool IsActive { get; set; }
 
-    public CreateRestaurantResponse() { }
+    public BaseRestaurantResponse() { }
 
-    public CreateRestaurantResponse(
+    public BaseRestaurantResponse(
         Guid id, string name, string subdomain,
         bool isActive, DateTime createdAt, DateTime updatedAt)
     {
@@ -20,37 +20,40 @@ public class CreateRestaurantResponse : BaseDtoResponse
         IsActive = isActive;
         CreatedAt = createdAt;
         UpdatedAt = updatedAt;
+    }
+}
+
+public class CreateRestaurantResponse
+{
+    public BaseRestaurantResponse Restaurant { get; set; } = new BaseRestaurantResponse();
+
+    public CreateRestaurantResponse() { }
+
+    public CreateRestaurantResponse(BaseRestaurantResponse restaurant)
+    {
+        Restaurant = restaurant;
     }
 }
 
 public class ListOneRestaurantResponse : BaseDtoResponse   
 {
-    public string Name { get; set; } = string.Empty;
-    public string Subdomain { get; set; } = string.Empty;
-    public bool IsActive { get; set; }
+    public BaseRestaurantResponse Restaurant { get; set; } = new BaseRestaurantResponse();
 
     public ListOneRestaurantResponse() { }
 
-    public ListOneRestaurantResponse(
-        Guid id, string name, string subdomain,
-        bool isActive, DateTime createdAt, DateTime updatedAt)
+    public ListOneRestaurantResponse(BaseRestaurantResponse restaurant)
     {
-        Id = id;
-        Name = name;
-        Subdomain = subdomain;
-        IsActive = isActive;
-        CreatedAt = createdAt;
-        UpdatedAt = updatedAt;
+        Restaurant = restaurant;
     }
 }
 
 public class ListManyRestaurantsResponse
 {
-    public List<ListOneRestaurantResponse> Restaurants { get; set; } = new List<ListOneRestaurantResponse>();
+    public List<BaseRestaurantResponse> Restaurants { get; set; } = new List<BaseRestaurantResponse>();
 
     public ListManyRestaurantsResponse() { }
 
-    public ListManyRestaurantsResponse(List<ListOneRestaurantResponse> restaurants)
+    public ListManyRestaurantsResponse(List<BaseRestaurantResponse> restaurants)
     {
         Restaurants = restaurants;
     }

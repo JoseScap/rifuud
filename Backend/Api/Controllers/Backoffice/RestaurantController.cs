@@ -45,9 +45,9 @@ public class RestaurantController : BaseController
     {
         var response = await _restaurantService.CreateRestaurantAsync(request);
         
-        _logger.LogInformation("Restaurant '{Name}' created successfully with ID {Id}", response.Name, response.Id);
+        _logger.LogInformation("Restaurant '{Name}' created successfully with ID {Id}", response.Restaurant.Name, response.Restaurant.Id);
         
-        return CreatedAtAction(nameof(Create), new { id = response.Id }, response);
+        return CreatedAtAction(nameof(Create), new { id = response.Restaurant.Id }, response);
     }
 
     /// <summary>
